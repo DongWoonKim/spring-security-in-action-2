@@ -24,12 +24,19 @@ public class SecurityConfig {
         http
                 .httpBasic(Customizer.withDefaults())
                 .authorizeHttpRequests(
-                        authz -> authz.anyRequest()
+                        authz ->
+                                authz
+//                                        .anyRequest()
 //                                .hasAuthority("WRITE")
 //                                .hasAnyAuthority("READ", "WRITE")
 //                                .access(AuthorityAuthorizationManager.hasAuthority("WRITE"))
 //                                .access(webExpressionAuthorizationManager)
-                                .hasRole("ADMIN")
+//                                .hasRole("ADMIN")
+                                    .requestMatchers("/hello").hasRole("ADMIN")
+                                    .requestMatchers("/ciao").hasRole("MANAGER")
+                                    .anyRequest()
+//                                        .permitAll()
+                                        .authenticated()
                 );
 
         return http.build();
