@@ -2,7 +2,6 @@ package com.example.security.springsecurityinaction2.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authorization.AuthorityAuthorizationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.User;
@@ -29,7 +28,8 @@ public class SecurityConfig {
 //                                .hasAuthority("WRITE")
 //                                .hasAnyAuthority("READ", "WRITE")
 //                                .access(AuthorityAuthorizationManager.hasAuthority("WRITE"))
-                                .access(webExpressionAuthorizationManager)
+//                                .access(webExpressionAuthorizationManager)
+                                .hasRole("ADMIN")
                 );
 
         return http.build();
@@ -41,12 +41,14 @@ public class SecurityConfig {
 
         var user1 = User.withUsername("john")
                 .password("12345")
-                .authorities("WRITE", "DELETE")
+//                .authorities("ROLE_ADMIN")
+                .roles("ADMIN")
                 .build();
 
         var user2 = User.withUsername("jane")
                 .password("12345")
-                .authorities("WRITE")
+//                .authorities("ROLE_MANAGER")
+                .roles("MANAGER")
                 .build();
 
         manager.createUser(user1);
