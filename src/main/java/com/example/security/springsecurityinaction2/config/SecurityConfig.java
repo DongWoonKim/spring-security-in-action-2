@@ -1,5 +1,6 @@
 package com.example.security.springsecurityinaction2.config;
 
+import com.example.security.springsecurityinaction2.filter.AuthenticationLoggingFilter;
 import com.example.security.springsecurityinaction2.filter.RequestValidationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,6 +29,7 @@ public class SecurityConfig {
 
         http
                 .addFilterBefore(new RequestValidationFilter(), BasicAuthenticationFilter.class)
+                .addFilterAfter(new AuthenticationLoggingFilter(), BasicAuthenticationFilter.class)
                 .csrf(c -> c.disable())
                 .httpBasic(Customizer.withDefaults())
                 .authorizeHttpRequests(
