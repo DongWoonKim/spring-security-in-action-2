@@ -1,5 +1,6 @@
 package com.example.security.springsecurityinaction2.config;
 
+import com.example.security.springsecurityinaction2.filter.RequestValidationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -12,6 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.expression.WebExpressionAuthorizationManager;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 import static org.springframework.http.HttpMethod.*;
 
@@ -25,15 +27,33 @@ public class SecurityConfig {
         WebExpressionAuthorizationManager webExpressionAuthorizationManager = new WebExpressionAuthorizationManager(expression);
 
         http
+                .addFilterBefore(new RequestValidationFilter(), BasicAuthenticationFilter.class)
                 .csrf(c -> c.disable())
                 .httpBasic(Customizer.withDefaults())
                 .authorizeHttpRequests(
                         authz ->
                                 authz
-                                        .requestMatchers(GET, "/hello").hasRole("ADMIN")
+//                                        .anyRequest()
+//                                .hasAuthority("WRITE")
+//                                .hasAnyAuthority("READ", "WRITE")
+//                                .access(AuthorityAuthorizationManager.hasAuthority("WRITE"))
+//                                .access(webExpressionAuthorizationManager)
+//                                .hasRole("ADMIN")
+//                                    .requestMatchers("/hello").hasRole("ADMIN")
+//                                    .requestMatchers("/ciao").hasRole("MANAGER")
+//                                    .anyRequest()
+//                                        .permitAll()
+//                                        .authenticated()
+                                        .requestMatchers(GET, "/hello").permitAll()
+//                                        .requestMatchers(GET, "/a").authenticated()
+//                                        .requestMatchers("/a/b/**").authenticated()
+//                                        .requestMatchers(POST, "/a").permitAll()
+//                                        .requestMatchers("/product/{code:^[0-9]*$}").permitAll()
                                         .requestMatchers("/video/{country:us|uk|ca}/{language:en|fr}").hasRole("MANAGER")
                                         .anyRequest().authenticated()
                 );
+
+
 
         return http.build();
     }
