@@ -1,10 +1,9 @@
 package com.example.security.springsecurityinaction2.config;
 
-import com.example.security.springsecurityinaction2.filter.AuthenticationLoggingFilter;
-import com.example.security.springsecurityinaction2.filter.RequestValidationFilter;
+import com.example.security.springsecurityinaction2.filter.StaticKeyAuthenticationFilter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.User;
@@ -19,7 +18,10 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 import static org.springframework.http.HttpMethod.*;
 
 @Configuration
+@RequiredArgsConstructor
 public class SecurityConfig {
+
+    private final StaticKeyAuthenticationFilter staticKeyAuthenticationFilter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -28,8 +30,9 @@ public class SecurityConfig {
         WebExpressionAuthorizationManager webExpressionAuthorizationManager = new WebExpressionAuthorizationManager(expression);
 
         http
-                .addFilterBefore(new RequestValidationFilter(), BasicAuthenticationFilter.class)
-                .addFilterAfter(new AuthenticationLoggingFilter(), BasicAuthenticationFilter.class)
+//                .addFilterBefore(new RequestValidationFilter(), BasicAuthenticationFilter.class)
+//                .addFilterAfter(new AuthenticationLoggingFilter(), BasicAuthenticationFilter.class)
+                .addFilterAt( staticKeyAuthenticationFilter, BasicAuthenticationFilter.class )
                 .csrf(c -> c.disable())
                 .httpBasic(Customizer.withDefaults())
                 .authorizeHttpRequests(
