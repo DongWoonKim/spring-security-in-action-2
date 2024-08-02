@@ -30,23 +30,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(
                         authz ->
                                 authz
-//                                        .anyRequest()
-//                                .hasAuthority("WRITE")
-//                                .hasAnyAuthority("READ", "WRITE")
-//                                .access(AuthorityAuthorizationManager.hasAuthority("WRITE"))
-//                                .access(webExpressionAuthorizationManager)
-//                                .hasRole("ADMIN")
-//                                    .requestMatchers("/hello").hasRole("ADMIN")
-//                                    .requestMatchers("/ciao").hasRole("MANAGER")
-//                                    .anyRequest()
-//                                        .permitAll()
-//                                        .authenticated()
-                                        .requestMatchers(GET, "/a").authenticated()
-                                        .requestMatchers("/a/b/**").authenticated()
-                                        .requestMatchers(POST, "/a").permitAll()
-                                        .requestMatchers("/product/{code:^[0-9]*$}").permitAll()
-                                        .anyRequest().denyAll()
-
+                                        .requestMatchers(GET, "/hello").hasRole("ADMIN")
+                                        .requestMatchers("/video/{country:us|uk|ca}/{language:en|fr}").hasRole("MANAGER")
+                                        .anyRequest().authenticated()
                 );
 
         return http.build();
